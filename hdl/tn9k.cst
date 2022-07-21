@@ -1,0 +1,43 @@
+IO_LOC "tmds_p[0]" 71,70;
+IO_LOC "tmds_p[1]" 73,72;
+IO_LOC "tmds_p[2]" 75,74;
+IO_LOC "tmds_clk_p" 69,68;
+IO_LOC "CLK_27MHZ" 52;
+
+
+IO_LOC "video0[0]" 82;
+IO_PORT "video0[0]" PULL_MODE=NONE;
+IO_LOC "video0[1]" 81;
+IO_PORT "video0[1]" PULL_MODE=NONE;
+IO_LOC "video0[2]" 80;
+IO_PORT "video0[2]" PULL_MODE=NONE;
+IO_LOC "video0[3]" 79;
+IO_PORT "video0[3]" PULL_MODE=NONE;
+
+IO_LOC "video1[0]" 25;
+IO_PORT "video1[0]" PULL_MODE=NONE;
+IO_LOC "video1[1]" 26;
+IO_PORT "video1[1]" PULL_MODE=NONE;
+IO_LOC "video1[2]" 27;
+IO_PORT "video1[2]" PULL_MODE=NONE;
+IO_LOC "video1[3]" 28;
+IO_PORT "video1[3]" PULL_MODE=NONE;
+
+IO_LOC "video2[0]" 29;
+IO_PORT "video2[0]" PULL_MODE=NONE;
+IO_LOC "video2[1]" 30;
+IO_PORT "video2[1]" PULL_MODE=NONE;
+IO_LOC "video2[2]" 33;
+IO_PORT "video2[2]" PULL_MODE=NONE;
+IO_LOC "video2[3]" 34;
+IO_PORT "video2[3]" PULL_MODE=NONE;
+
+IO_LOC "dclk0" 86;
+IO_PORT "dclk0" PULL_MODE=NONE;
+IO_LOC "dclk1" 85;
+IO_PORT "dclk1" PULL_MODE=NONE;
+
+IO_LOC "hblank" 84;
+IO_PORT "hblank" PULL_MODE=NONE;
+IO_LOC "vblank" 83;
+IO_PORT "vblank" PULL_MODE=NONE;
