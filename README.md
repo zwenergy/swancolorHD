@@ -7,7 +7,7 @@ Additionally, it needs the video core from sameer, to be [found here](https://gi
 ## About
 This project is an open-source consolizer for the WonderSwan Color handheld, based on a Tang Nano 9k board.
 
-# Wiring
+## Wiring
 The display signals can be easily wired to the FPGA board by using an FFC breakout board and an FFC cable.
 The required FFC is 24 pins with 0.5 mm pitch.
 
