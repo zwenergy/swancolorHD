@@ -5,7 +5,7 @@ This project is in a very early stage right now, just video, no audio yet.
 Additionally, it needs the video core from sameer, to be [found here](https://github.com/hdl-util/hdmi).
 
 ## About
-This project is an open-source consolizer for the WonderSwan Color handheld, based on a Tang Nano 9k FPGA board.
+This project is an open-source consolizer for the WonderSwan Color handheld, based on a Tang Nano 9k FPGA board (which has a GW1NR-LV9QN88P FPGA on it).
 
 ## Wiring
 The display signals can be easily wired to the FPGA board by using an FFC breakout board and an FFC cable.
