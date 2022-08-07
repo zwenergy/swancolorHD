@@ -1,7 +1,7 @@
 # swancolorHD
 An open-source WonderSwan Color consolizer.
 
-This project is in a very early stage right now, just video, no audio yet.
+This project is in a very early stage right now.
 Additionally, it needs the video core from sameer, to be [found here](https://github.com/hdl-util/hdmi).
 
 ## About
