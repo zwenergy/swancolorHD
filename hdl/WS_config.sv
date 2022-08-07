@@ -9,6 +9,7 @@
 package configPackage;  
 
   localparam COLLEN = 80;
+  localparam AUDIO_BIT_WIDTH = 16;
 
   `ifdef RES_480P
     localparam FRAMEWIDTH = 720;
@@ -16,13 +17,30 @@ package configPackage;
     localparam SCALE = 3;
     localparam VIDEOID = 2;
     localparam VIDEO_REFRESH = 59.94;
-    localparam AUDIO_BIT_WIDTH = 16;
 
     localparam IDIV_SEL_X5 = 0;
     localparam FBDIV_SEL_X5 = 4;
     localparam ODIV_SEL_X5 = 4;
     localparam DUTYDA_SEL_X5 = "1000";
     localparam DYN_SDIV_SEL_X5 = 2;
+    
+    localparam CLKFRQ = 27000;
+  `endif
+
+  `ifdef RES_720P
+    localparam FRAMEWIDTH = 1280;
+    localparam FRAMEHEIGHT = 720;
+    localparam SCALE = 5;
+    localparam VIDEOID = 4;
+    localparam VIDEO_REFRESH = 60.0;
+
+    localparam IDIV_SEL_X5 = 3;
+    localparam FBDIV_SEL_X5 = 54;
+    localparam ODIV_SEL_X5 = 2;
+    localparam DUTYDA_SEL_X5 = "1000";
+    localparam DYN_SDIV_SEL_X5 = 2;
+    
+    localparam CLKFRQ = 74250;
   `endif
 
 endpackage

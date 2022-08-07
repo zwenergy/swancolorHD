@@ -16,6 +16,9 @@ module topUnit
   input logic[3:0] video0,
   input logic[3:0] video1,
   input logic[3:0] video2,
+  input logic SDAT,
+  input logic LRCK,
+  input logic BCLK,
   
   output logic tmds_clk_p,
   output logic tmds_clk_n,
@@ -117,6 +120,9 @@ imageGen ig ( .pxlClk( pxlClk ),
               .rst( rst ),
               .pxlData( pxlFromBuff ),
               .pxlAddr( pxlAddrRD ),
+              .SDAT( SDAT ),
+              .LRCK( LRCK ),
+              .BCLK( BCLK ),
               .tmds_clk( tmds_clk_int ),
               .tmds_p( tmds_int )
               );

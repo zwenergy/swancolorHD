@@ -14,6 +14,11 @@ module imageGen
   
   input logic[35:0] pxlData,
   output logic[13:0] pxlAddr,
+
+  // Audio
+  input logic SDAT,
+  input logic LRCK,
+  input logic BCLK,
   
   output logic tmds_clk,
   output logic[2:0] tmds_p,
@@ -44,7 +49,36 @@ logic [23:0] latestPixel;
 
 logic [3:0] scaleCntX, scaleCntY;
 
+logic [15:0] audioL, audioR, audioLBuff, audioRBuff;
+logic audioValidL, audioValidR;
+
+localparam int AUDIOCLKMAXCNT = ( CLKFRQ / 48 );
+logic [$clog2(AUDIOCLKMAXCNT)-1:0] audioCnt;
+logic audioClk;
+
 assign pxlAddr = pxlAddrBuffer;
+
+
+// Audio stuff.
+always_ff @( posedge pxlClk ) begin
+  if ( audioCnt == AUDIOCLKMAXCNT - 1 )
+    audioCnt <= 0;
+  else
+    audioCnt <= audioCnt + 1;
+
+  if ( audioCnt >= AUDIOCLKMAXCNT / 2 )
+    audioClk <= 1;
+  else
+    audioClk <= 0;
+  
+  if ( audioValidL == 1 )
+    audioLBuff <= audioL >>> 2;
+
+  if ( audioValidR == 1 )
+    audioRBuff <= audioR >>> 2;
+
+end
+
 
 always_ff @( posedge pxlClk ) begin
   colCnt_del <= colCnt;
@@ -120,6 +154,10 @@ logic[2:0] tmds;
 assign tmds_p = tmds;
 assign tmds_clk = pxlClk;
 
+logic [AUDIO_BIT_WIDTH-1:0] audioWord [1:0];
+assign audioWord[0] = audioRBuff;
+assign audioWord[1] = audioLBuff;
+
 // Instantiate video module.
 hdmi #( .VIDEO_ID_CODE(VIDEOID), 
         .DVI_OUTPUT(0), 
@@ -132,15 +170,28 @@ hdmi #( .VIDEO_ID_CODE(VIDEOID),
 
 hdmi( .clk_pixel_x5(pxlClkx5), 
       .clk_pixel(pxlClk), 
-      //.clk_audio(audioClk_gba),
+      .clk_audio(audioClk),
       .rgb(rgb), 
       .reset( rst ),
-      //.audio_sample_word('{pcmL, pcmR}),
+      .audio_sample_word(audioWord),
       .tmds(tmds), 
       .tmds_clock(tmdsClk), 
       .cx(cx), 
       .cy(cy),
       .frame_width( frameWidth ),
       .frame_height( frameHeight ) );
+
+
+// Instantiate audio capture.
+audioCapture audio(
+  .clk( pxlClk ),
+  .rst( rst ),
+  .LRCK( LRCK ),
+  .SDAT( SDAT ),
+  .BCLK( BCLK ),
+  .audioOutL( audioL ),
+  .audioOutR( audioR ),
+  .audioValidR( audioValidR ),
+  .audioValidL( audioValidL ) );
       
 endmodule
