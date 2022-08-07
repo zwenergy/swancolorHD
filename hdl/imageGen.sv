@@ -35,8 +35,8 @@ localparam int VIEWPORTEND_Y = VIEWPORTSTART_Y + VIEWPORTLEN_Y;
 localparam int WINDOWLEN_X = COLLEN * 3 * SCALE;
 localparam int WINDOWLEN_Y = 150 * SCALE;
 
-localparam int WINDOWEND_X = VIEWPORTSTART_X + WINDOWLEN_X;
-localparam int WINDOWEND_Y = VIEWPORTSTART_Y + WINDOWLEN_Y;
+localparam int WINDOWEND_X = FRAMEWIDTH;
+localparam int WINDOWEND_Y = FRAMEHEIGHT;
 
 logic [23:0] rgb;
 logic [10:0] cy, frameHeight;
