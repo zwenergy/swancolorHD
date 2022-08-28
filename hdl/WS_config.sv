@@ -8,9 +8,6 @@
 
 package configPackage;  
 
-  localparam COLLEN = 80;
-  localparam AUDIO_BIT_WIDTH = 16;
-
   `ifdef RES_480P
     localparam FRAMEWIDTH = 720;
     localparam FRAMEHEIGHT = 480;
@@ -46,5 +43,12 @@ package configPackage;
     
     localparam CLKFRQ = 74250;
   `endif
+
+  localparam COLLEN = 80;
+  localparam AUDIO_BIT_WIDTH = 16;
+
+  localparam POWERUPNS = 100000000.0;
+  localparam CLKPERNS = (1.0/CLKFRQ)*1000000.0;
+  localparam int POWERUPCYCLES = $ceil( POWERUPNS/CLKPERNS );
 
 endpackage
