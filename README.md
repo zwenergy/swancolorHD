@@ -7,7 +7,11 @@ Additionally, it needs the video core from sameer, to be [found here](https://gi
 ## About
 This project is an open-source consolizer for the WonderSwan Color handheld, based on a Tang Nano 9k FPGA board (which has a GW1NR-LV9QN88P FPGA on it).
 
-## PCB BOM
+## PCB
+<img src="./assets/pcb.png" alt="drawing" width="600"/>
+
+
+### PCB BOM
 | **Reference** | **Part** | **Link** |
 ---------|------|------|
 |FPC1    | FFC connector with 24 pins, 0.5mm pitch, bottom contacts | [LCSC](https://lcsc.com/product-detail/FFC-FPC-Connectors_XUNPU-FPC-05F-24PH20_C2856805.html)|
