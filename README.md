@@ -25,6 +25,11 @@ This project is an open-source consolizer for the WonderSwan Color handheld, bas
 |L2 | 10 uH inductivity (1206) | [LCSC](https://lcsc.com/product-detail/Inductors-SMD_FH-Guangdong-Fenghua-Advanced-Tech-CMI321609X100KT_C1051.html)|
 |Q1 - Q12 | N-channel MOSFET 2N7002 (SOT-23) |[LCSC](https://lcsc.com/product-detail/MOSFETs_Jiangsu-Changjing-Electronics-Technology-Co-Ltd-2N7002_C8545.html)|
 
+## PCB Wiring Diagram
+Check the [wiring diagram from WSC motherboard to PCB in the assets folder](./assets/wiring.png) for full zoom.
+<img src="./assets/wiring.png" alt="drawing" width="600"/>
+
+
 ## Manual Wiring (without PCB)
 The display signals can be easily wired to the FPGA board by using an FFC breakout board and an FFC cable.
 The required FFC is 24 pins with 0.5 mm pitch.
