@@ -57,9 +57,31 @@ void readController() {
   digitalWrite( SNESLATCH, 0 );
   delayMicroseconds( 6 );
 
-  // Init A and B.
-  conB = 0;
+  // Hold SNES buttons temporarily.
+  uint8_t snesUP = 0;
+  uint8_t snesDOWN = 0;
+  uint8_t snesLEFT = 0;
+  uint8_t snesRIGHT = 0;
+  uint8_t snesSTART = 0;
+  uint8_t snesSELECT = 0;
+  uint8_t snesX = 0;
+  uint8_t snesY = 0;
+  uint8_t snesA = 0;
+  uint8_t snesB = 0;
+  uint8_t snesL = 0;
+  uint8_t snesR = 0;
+
+  conX1 = 0;
+  conX2 = 0;
+  conX3 = 0;
+  conX4 = 0;
+  conY1 = 0;
+  conY2 = 0;
+  conY3 = 0;
+  conY4 = 0;
   conA = 0;
+  conB = 0;
+  conStart = 0;
 
   // Shift in the controller data.
   // Logic 0 means pressed.
@@ -71,44 +93,44 @@ void readController() {
       uint8_t curDat = !digitalRead( SNESSERIAL );
       switch ( i ) {
         case 0:
-          conB |= curDat;
+          snesB = curDat;
           break;
         case 1:
-          conB |= curDat;
+          snesY = curDat;
           break;
         case 2:
-          // Select, do nothing.
+          snesSELECT = curDat;
           break;
         case 3:
-          conStart = curDat;
+          snesSTART = curDat;
           break;
         case 4:
           // Up
-          conX1 = curDat;
+          snesUP = curDat;
           break;
         case 5:
           // Down
-          conX3 = curDat;
+          snesDOWN = curDat;
           break;
         case 6:
           // Left
-          conX4 = curDat;
+          snesLEFT = curDat;
           break;
         case 7:
           // Right
-          conX2 = curDat;
+          snesRIGHT = curDat;
           break;
         case 8:
-          conA |= curDat;
+          snesA = curDat;
           break;
         case 9:
-          conA |= curDat;
+          snesX = curDat;
           break;
         case 10:
-          // L, do nothing.
+          snesL = curDat;
           break;
         case 11:
-          // R, do nothing
+          snesR = curDat;
           break;
         default:
           break;
@@ -117,6 +139,33 @@ void readController() {
     }
     digitalWrite( SNESCLK, 1 );
     delayMicroseconds( 6 );
+  }
+
+  // Do the mapping.
+  conStart = snesSTART;
+
+  // In case L is pressed, we map the WS Y buttons to the DPAD.
+  if ( snesL ) {
+    conY1 = snesUP;
+    conY2 = snesRIGHT;
+    conY3 = snesDOWN;
+    conY4 = snesLEFT;
+  } else {
+    conX1 = snesUP;
+    conX2 = snesRIGHT;
+    conX3 = snesDOWN;
+    conX4 = snesLEFT;
+  }
+
+  // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
+  if ( snesR ) {
+    conY1 = snesX;
+    conY2 = snesA;
+    conY3 = snesB;
+    conY4 = snesY;
+  } else {
+    conB = snesB |snesY;
+    conA = snesA |snesX;
   }
 }
 
