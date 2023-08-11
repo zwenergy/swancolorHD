@@ -55,3 +55,27 @@ The required FFC is 24 pins with 0.5 mm pitch.
 | 7               | 30               |
 | 8               | 33               |
 | 9               | 34               |
+
+## Controller Mapping
+By default, the SNES DPAD is mapped to the X buttons of the WonderSwan. 
+The controller's B & Y buttons are mapped to the WonderSwan's B button, A & Y are mapped to A. 
+Start is mapped to Start.
+
+To control the WS Y buttons, use the L or R shoulder buttons.
+When holding L, the SNES DPAD is mapped to the WS Y buttons.
+When holding R, A/B/X/Y are mapped to Y2/Y3/Y1/Y4.
+
+|SNES Button | WS Button (no shoulder button held) | WS Button (holding L) | WS Button (holding R )|
+|------------|-------------------------------------|-----------------------|-----------------------|
+|UP | X1 | Y1 | X1 |
+|DOWN | X3 | Y3 | X3 |
+|LEFT | X4 | Y4 | X4 |
+|RIGHT | X2 | Y2 | X2 |
+|A | A | A | Y2 |
+|B | B | B | Y3 |
+|X | A | A | Y1 |
+|Y | B | B | Y4 |
+|START | START | START | START |
+
+
+
