@@ -20,6 +20,7 @@ module topUnit
   input logic LRCK,
   input logic BCLK,
   
+  input logic ARDCON,
 
   output powerOut,
   output logic tmds_clk_p,
@@ -121,6 +122,7 @@ imageGen ig ( .pxlClk( pxlClk ),
               .pxlClkx5( pxlClkx5 ),
               .rst( rst ),
               .pxlData( pxlFromBuff ),
+              .rotate( ARDCON ),
               .pxlAddr( pxlAddrRD ),
               .SDAT( SDAT ),
               .LRCK( LRCK ),

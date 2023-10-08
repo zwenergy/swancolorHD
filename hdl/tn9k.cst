@@ -1,7 +1,11 @@
 IO_LOC "tmds_p[0]" 71,70;
+IO_PORT "tmds_p[0]" PULL_MODE=NONE DRIVE=8;
 IO_LOC "tmds_p[1]" 73,72;
+IO_PORT "tmds_p[1]" PULL_MODE=NONE DRIVE=8;
 IO_LOC "tmds_p[2]" 75,74;
+IO_PORT "tmds_p[2]" PULL_MODE=NONE DRIVE=8;
 IO_LOC "tmds_clk_p" 69,68;
+IO_PORT "tmds_clk_p" PULL_MODE=NONE DRIVE=8;
 IO_LOC "CLK_27MHZ" 52;
 
 
@@ -51,3 +55,6 @@ IO_PORT "vblank" PULL_MODE=NONE;
 
 IO_LOC "powerOut" 31;
 IO_PORT "powerOut" PULL_MODE=NONE;
+
+IO_LOC "ARDCON" 32;
+IO_PORT "ARDCON" PULL_MODE=UP;

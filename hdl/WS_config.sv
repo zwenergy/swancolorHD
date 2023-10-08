@@ -3,7 +3,7 @@
 //-- Author: zwenergy
 //-----------------------------------------------------------------------
 
-`define RES_720P
+`define RES_480P
 `define GW_IDE
 
 package configPackage;  
@@ -14,6 +14,7 @@ package configPackage;
     localparam TOTALWIDTH = 858;
     localparam TOTALHEIGHT = 525;
     localparam SCALE = 3;
+    localparam SCALEROT = 2;
     localparam VIDEOID = 2;
     localparam VIDEO_REFRESH = 59.94;
 
@@ -32,6 +33,7 @@ package configPackage;
     localparam TOTALWIDTH = 1650;
     localparam TOTALHEIGHT = 750;
     localparam SCALE = 5;
+    localparam SCALEROT = 3;
     localparam VIDEOID = 4;
     localparam VIDEO_REFRESH = 60.0;
 

@@ -14,6 +14,8 @@ module imageGen
   
   input logic[35:0] pxlData,
   output logic[13:0] pxlAddr,
+  
+  input logic rotate,
 
   // Audio
   input logic SDAT,
@@ -38,6 +40,21 @@ localparam int WINDOWLEN_Y = 150 * SCALE;
 localparam int WINDOWEND_X = VIEWPORTSTART_X + WINDOWLEN_X;
 localparam int WINDOWEND_Y = FRAMEHEIGHT;
 
+
+localparam int VIEWPORTLENROT_X = SCALEROT * 144;
+localparam int VIEWPORTLENROT_Y = SCALEROT * 224;
+localparam int VIEWPORTSTARTROT_X = ( FRAMEWIDTH - VIEWPORTLENROT_X ) / 2;
+localparam int VIEWPORTSTARTROT_Y = ( FRAMEHEIGHT - VIEWPORTLENROT_Y ) / 2;
+localparam int VIEWPORTENDROT_X = VIEWPORTSTARTROT_X + VIEWPORTLENROT_X;
+localparam int VIEWPORTENDROT_Y = VIEWPORTSTARTROT_Y + VIEWPORTLENROT_Y;
+
+localparam int WINDOWLENROT_X = 150 * SCALEROT;
+localparam int WINDOWLENROT_Y = COLLEN * 3 * SCALEROT;
+
+localparam int WINDOWENDROT_X = VIEWPORTSTARTROT_X + WINDOWLENROT_X;
+localparam int WINDOWENDROT_Y = FRAMEHEIGHT;
+
+
 logic [23:0] rgb;
 logic [10:0] cy, frameHeight;
 logic [11:0] cx, frameWidth;
@@ -46,6 +63,7 @@ logic [8:0] lineCntPxl;
 logic [2:0] colCnt, colCnt_del;
 logic [13:0] lineBase;
 logic [23:0] latestPixel;
+logic [7:0] lineCntAbs, lineCntRel;
 
 logic [3:0] scaleCntX, scaleCntY;
 
@@ -55,6 +73,8 @@ logic audioValidL, audioValidR;
 localparam int AUDIOCLKMAXCNT = ( CLKFRQ / 48 );
 logic [$clog2(AUDIOCLKMAXCNT)-1:0] audioCnt;
 logic audioClk;
+
+logic rotate_int;
 
 assign pxlAddr = pxlAddrBuffer;
 
@@ -82,6 +102,7 @@ end
 
 always_ff @( posedge pxlClk ) begin
   colCnt_del <= colCnt;
+  rotate_int <= !rotate;
 
   if ( colCnt_del == 0 )
     latestPixel <= {pxlData[35:32], 4'b0000, pxlData[31:28], 4'b0000, pxlData[27:24], 4'b0000 };
@@ -89,64 +110,156 @@ always_ff @( posedge pxlClk ) begin
     latestPixel <= {pxlData[23:20], 4'b0000, pxlData[19:16], 4'b0000, pxlData[15:12], 4'b0000 };
   else
     latestPixel <= {pxlData[11:8], 4'b0000, pxlData[7:4], 4'b0000, pxlData[3:0], 4'b0000 };
+  
+  // Regular, not rotated video
+  if ( !rotate_int ) begin
+    if ( cx == VIEWPORTSTART_X )
+      lineBase <= pxlAddrBuffer;
 
-  if ( cx == VIEWPORTSTART_X )
-    lineBase <= pxlAddrBuffer;
 
-
-  if ( cy > WINDOWEND_Y ) begin
-    pxlAddrBuffer <= 0;
-    lineCntPxl <= 0;
-    scaleCntX <= 0;
-    scaleCntY <= 0;
-    lineBase <= 0;
-
-  end else if ( cx == WINDOWEND_X + 1 ) begin
-    scaleCntX <= 0;
-
-    if ( scaleCntY == SCALE - 1 ) begin
-      scaleCntY <= 0;
-    end else begin
-      scaleCntY <= scaleCntY + 1;
-    end
-  end
-
-  // Viewport stuff
-  if ( cx > VIEWPORTSTART_X && cx <= VIEWPORTEND_X && cy > VIEWPORTSTART_Y && cy <= VIEWPORTEND_Y )
-  begin
-    rgb <= latestPixel;
-  end 
-  else begin
-    rgb <= {24{1'b1}};
-  end
-
-  // Actual FB window.
-  if ( cx > VIEWPORTSTART_X && cx <= WINDOWEND_X && cy > VIEWPORTSTART_Y && cy <= WINDOWEND_Y )
-  begin
-    if ( ( lineCntPxl == COLLEN - 1 ) && ( scaleCntX == SCALE - 1 ) ) begin
-      if ( ( colCnt < 2 ) || ( scaleCntY < SCALE - 1 ) )
-        pxlAddrBuffer <= lineBase;
-      else
-        pxlAddrBuffer <= pxlAddrBuffer + 1;
-            
+    if ( cy > WINDOWEND_Y ) begin
+      pxlAddrBuffer <= 0;
       lineCntPxl <= 0;
       scaleCntX <= 0;
-      colCnt <= colCnt + 1;
-    end else begin
-      if ( scaleCntX == SCALE - 1 ) begin
-        lineCntPxl <= lineCntPxl + 1;
-        pxlAddrBuffer <= pxlAddrBuffer + 1;
-        scaleCntX <= 0;
+      scaleCntY <= 0;
+      lineBase <= 0;
+      colCnt <= 0;
 
+    end else if ( cx == WINDOWEND_X + 1 ) begin
+      scaleCntX <= 0;
+
+      if ( scaleCntY == SCALE - 1 ) begin
+        scaleCntY <= 0;
       end else begin
-       scaleCntX <= scaleCntX + 1;
-      end;
+        scaleCntY <= scaleCntY + 1;
+      end
     end
-  end
 
-  else begin
-    colCnt <= 0;
-    lineCntPxl <= 0;
+    // Viewport stuff
+    if ( cx > VIEWPORTSTART_X && cx <= VIEWPORTEND_X && cy > VIEWPORTSTART_Y && cy <= VIEWPORTEND_Y )
+    begin
+      rgb <= latestPixel;
+    end 
+    else begin
+      rgb <= {24{1'b0}};
+    end
+
+    // Actual FB window.
+    if ( cx > VIEWPORTSTART_X && cx <= WINDOWEND_X && cy > VIEWPORTSTART_Y && cy <= WINDOWEND_Y )
+    begin
+      if ( ( lineCntPxl == COLLEN - 1 ) && ( scaleCntX == SCALE - 1 ) ) begin
+        if ( ( colCnt < 2 ) || ( scaleCntY < SCALE - 1 ) )
+          pxlAddrBuffer <= lineBase;
+        else
+          pxlAddrBuffer <= pxlAddrBuffer + 1;
+              
+        lineCntPxl <= 0;
+        scaleCntX <= 0;
+        colCnt <= colCnt + 1;
+      end else begin
+        if ( scaleCntX == SCALE - 1 ) begin
+          lineCntPxl <= lineCntPxl + 1;
+          pxlAddrBuffer <= pxlAddrBuffer + 1;
+          scaleCntX <= 0;
+
+        end else begin
+         scaleCntX <= scaleCntX + 1;
+        end;
+      end
+    end
+
+    else begin
+      colCnt <= 0;
+      lineCntPxl <= 0;
+    end
+  
+  
+  // Rotated video.
+  end else begin
+    if ( cx == VIEWPORTSTARTROT_X )
+      lineBase <= pxlAddrBuffer;
+    
+    if ( cy > VIEWPORTENDROT_Y ) begin
+      pxlAddrBuffer <= COLLEN - 1 - 16;
+      lineCntPxl <= 0;
+      scaleCntX <= 0;
+      scaleCntY <= 0;
+      lineBase <= 0;
+      colCnt <= 2;
+      lineCntAbs <= 16;
+      lineCntRel <= 16;
+
+    end
+
+    // Viewport stuff
+    if ( cx > VIEWPORTSTARTROT_X && cx <= VIEWPORTENDROT_X && cy > VIEWPORTSTARTROT_Y && cy <= VIEWPORTENDROT_Y )
+    begin
+      rgb <= latestPixel;
+    end 
+    else begin
+      rgb <= {24{1'b0}};
+    end
+    
+    
+    // Set ColCnt.
+    if ( lineCntAbs <= COLLEN - 1 ) begin
+      colCnt <= 2;
+      
+    end else if ( lineCntAbs <= ( 2 * COLLEN ) - 1 ) begin
+      colCnt <= 1;
+      
+    end else begin
+      colCnt <= 0;
+    end;
+    
+
+    // Actual FB window.
+    if ( cx > VIEWPORTSTARTROT_X && cx <= WINDOWENDROT_X && cy > VIEWPORTSTARTROT_Y && cy <= VIEWPORTENDROT_Y )
+    begin
+      if ( ( lineCntPxl == 150 - 1 ) && ( scaleCntX == SCALEROT - 1 ) ) begin
+        // End of a line.
+        lineCntPxl <= 0;
+        scaleCntX <= 0;
+        
+        if ( scaleCntY == SCALEROT - 1 ) begin
+          lineCntAbs <= lineCntAbs + 1;
+          scaleCntY <= 0;
+          
+          if ( lineCntRel == COLLEN - 1 ) begin
+            lineCntRel <= 0;
+            pxlAddrBuffer <= COLLEN - 1;
+            
+          end else begin
+            lineCntRel <= lineCntRel + 1;
+            pxlAddrBuffer <= lineBase - 1;
+          
+          end;
+        
+        end else begin
+          scaleCntY <= scaleCntY + 1;
+          pxlAddrBuffer <= lineBase;
+        end;
+        
+        
+      end else begin
+        if ( scaleCntX == SCALEROT - 1 ) begin
+          lineCntPxl <= lineCntPxl + 1;
+          scaleCntX <= 0;
+          pxlAddrBuffer <= pxlAddrBuffer + COLLEN;
+        end else begin
+          scaleCntX <= scaleCntX + 1;
+        end;
+        
+      end;
+      
+    end else begin
+      //colCnt <= 2;
+      //lineCntAbs <= 0;
+      //lineCntRel <= 0;
+      lineCntPxl <= 0;
+
+    end
+      
   end
 end
 

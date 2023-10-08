@@ -19,6 +19,8 @@
 #define SNESCLK A1
 #define SNESSERIAL A2
 
+#define ARDCON A3
+
 // Polling interval in ms.
 #define POLLINT 2
 
@@ -48,6 +50,10 @@ uint8_t conY2;
 uint8_t conY3;
 uint8_t conY4;
 uint8_t conStart;
+
+// Rotate mode?
+uint8_t rotate = 0;
+uint8_t selectPrev = 0;
 
 // Read the controller.
 void readController() {
@@ -144,29 +150,53 @@ void readController() {
   // Do the mapping.
   conStart = snesSTART;
 
-  // In case L is pressed, we map the WS Y buttons to the DPAD.
-  if ( snesL ) {
-    conY1 = snesUP;
-    conY2 = snesRIGHT;
-    conY3 = snesDOWN;
-    conY4 = snesLEFT;
-  } else {
-    conX1 = snesUP;
-    conX2 = snesRIGHT;
-    conX3 = snesDOWN;
-    conX4 = snesLEFT;
+  // Pressing SELECT toggles rotate.
+  if ( !selectPrev && snesSELECT ) {
+    rotate = !rotate;
   }
 
-  // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
-  if ( snesR ) {
-    conY1 = snesX;
-    conY2 = snesA;
-    conY3 = snesB;
-    conY4 = snesY;
+  // Rotated screen?
+  if ( rotate ) {
+    conY2 = snesUP;
+    conY3 = snesRIGHT;
+    conY4 = snesDOWN;
+    conY1 = snesLEFT;
+
+    conX2 = snesX;
+    conX3 = snesA;
+    conX4 = snesB;
+    conX1 = snesY;
+    
   } else {
-    conB = snesB |snesY;
-    conA = snesA |snesX;
+    // Not rotated screen.
+    
+    // In case L is pressed, we map the WS Y buttons to the DPAD.
+    if ( snesL ) {
+      conY1 = snesUP;
+      conY2 = snesRIGHT;
+      conY3 = snesDOWN;
+      conY4 = snesLEFT;
+    } else {
+      conX1 = snesUP;
+      conX2 = snesRIGHT;
+      conX3 = snesDOWN;
+      conX4 = snesLEFT;
+    }
+  
+    // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
+    if ( snesR ) {
+      conY1 = snesX;
+      conY2 = snesA;
+      conY3 = snesB;
+      conY4 = snesY;
+    } else {
+      conB = snesB |snesY;
+      conA = snesA |snesX;
+    }
+
   }
+
+  selectPrev = snesSELECT;
 }
 
 
@@ -185,6 +215,16 @@ void updateWonderSignals() {
     ( conStart << 4 );
   PORTB = dat; 
 
+}
+
+void doComm() {
+  if ( rotate ) {
+    // Actuall drive GND.
+    pinMode( ARDCON, OUTPUT );
+  } else {
+    // High Z.
+    pinMode( ARDCON, INPUT );
+  }
 }
 
 void setup() {
@@ -220,6 +260,10 @@ void setup() {
   pinMode( BUTSTART, OUTPUT );
   digitalWrite( BUTSTART, 0 );
 
+  pinMode( ARDCON, OUTPUT );
+  digitalWrite( ARDCON, 0 );
+  pinMode( ARDCON, INPUT );
+
   // And the SNES controller pins.
   pinMode( SNESLATCH, OUTPUT );
   digitalWrite( SNESLATCH, 0 );
@@ -233,6 +277,8 @@ void loop() {
   readController();
 
   updateWonderSignals();
+
+  doComm();
 
   delay( POLLINT );
 
