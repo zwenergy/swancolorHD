@@ -57,6 +57,8 @@ The required FFC is 24 pins with 0.5 mm pitch.
 | 9               | 34               |
 
 ## Controller Mapping
+The controller mapping differs for landscape and portrait mode.
+### Landscape Mode
 By default, the SNES DPAD is mapped to the X buttons of the WonderSwan. 
 The controller's B & Y buttons are mapped to the WonderSwan's B button, A & Y are mapped to A. 
 Start is mapped to Start.
@@ -77,5 +79,10 @@ When holding R, A/B/X/Y are mapped to Y2/Y3/Y1/Y4.
 |Y | B | B | Y4 |
 |START | START | START | START |
 
+### Portrait Mode
+The SNES DPAD is mapped to the Y buttons of the WonderSwan (rotated accordingly).
+Y is mapped to X1, X is mappped to X2, A is mapped to X3 and B is mapped to X4.
+Start is mapped to Start.
 
-
+## Switching from Landscape Mode to Portrait Mode
+In order to switch from landscape to portrait mode (or vice versa), just press the "Select" button on the SNES gamepad.
