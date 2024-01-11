@@ -29,6 +29,12 @@ This project is an open-source consolizer for the WonderSwan Color handheld, bas
 Check the [wiring diagram from WSC motherboard to PCB in the assets folder](./assets/wiring.png) for full zoom.
 <img src="./assets/wiring.png" alt="drawing" width="600"/>
 
+**Connections on the WSC backside:**
+| WSC Motherboard | Consolizer PCB   |
+|-----------------|------------------|
+| Battery +       | 1V5              |
+| Battery -       | GND              |
+
 ## Display Connector
 Use a 24 pin same-side (also known as "type A") flex cable with 0.5 mm pitch to connect the display FFC connector of the WSC motherboard to the PCB FFC connector.
 
