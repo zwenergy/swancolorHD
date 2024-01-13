@@ -92,3 +92,7 @@ Start is mapped to Start.
 
 ## Switching from Landscape Mode to Portrait Mode
 In order to switch from landscape to portrait mode (or vice versa), just press the "Select" button on the SNES gamepad.
+
+## Switching from Landscape Mode to Portrait Mode without Video Rotation
+If you want to use the video out with a properly rotated display for portrait mode games (so actually rotate the display itself), you want to have the portrait mode gamepad mapping but without the video being rotated from the consolizer.
+For this, you can activate (and deactivate) portrait mode controller mapping without video rotation via the button combination: **L + R + START + DPAD UP**.
