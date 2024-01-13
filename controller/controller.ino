@@ -55,6 +55,11 @@ uint8_t conStart;
 uint8_t rotate = 0;
 uint8_t selectPrev = 0;
 
+// Internal rotate mode?
+// (only rotate the controls, not the video)
+uint8_t rotateInt = 0;
+uint8_t intRotateComboPrev = 0;
+
 // Read the controller.
 void readController() {
   // Set the latch to high for 12 us.
@@ -155,8 +160,14 @@ void readController() {
     rotate = !rotate;
   }
 
+  // Internal rotate?
+  uint8_t intRotateCombo = snesL && snesR && snesSTART && snesUP;
+  if ( !intRotateComboPrev && intRotateCombo ) {
+    rotateInt = !rotateInt;
+  }
+
   // Rotated screen?
-  if ( rotate ) {
+  if ( rotate || rotateInt ) {
     conY2 = snesUP;
     conY3 = snesRIGHT;
     conY4 = snesDOWN;
@@ -197,6 +208,7 @@ void readController() {
   }
 
   selectPrev = snesSELECT;
+  intRotateComboPrev = intRotateCombo;
 }
 
 
