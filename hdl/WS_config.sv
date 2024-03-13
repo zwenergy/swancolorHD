@@ -3,7 +3,7 @@
 //-- Author: zwenergy
 //-----------------------------------------------------------------------
 
-`define RES_480P
+`define RES_720P_75HZ
 `define GW_IDE
 
 package configPackage;  
@@ -121,5 +121,8 @@ package configPackage;
   localparam POWERUPNS = 100000000.0;
   localparam CLKPERNS = (1.0/CLKFRQ)*1000000.0;
   localparam int POWERUPCYCLES = $ceil( POWERUPNS/CLKPERNS );
+
+  localparam POWERWAITNS = 500000000.0;
+  localparam int POWERWAITCYCLES = $ceil( POWERWAITNS/CLKPERNS );
 
 endpackage

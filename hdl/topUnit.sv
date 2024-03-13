@@ -159,6 +159,7 @@ ELVDS_OBUF uutclk(
 
 // Power up the WSC.
 logic [ $clog2( POWERUPCYCLES ) - 1 : 0 ] powerCnt = 0;
+logic [ $clog2( POWERWAITCYCLES ) - 1 : 0 ] powerWaitCnt = 0;
 logic powerOut_int;
 
 assign powerOut = powerOut_int;
@@ -167,9 +168,15 @@ always_ff @( posedge pxlClk ) begin
 
   if ( rst ) begin
     powerCnt <= 0;
-    powerOut_int <= 0;
+    powerOut_int <= 1'bz;
+    powerWaitCnt <= 0;
   end else begin
-    if ( powerCnt < POWERUPCYCLES - 1 ) begin
+
+    if ( powerWaitCnt < POWERWAITCYCLES - 1 ) begin
+      powerOut_int <= 1'bz;
+      powerWaitCnt <= powerWaitCnt + 1;
+
+    end else if ( powerCnt < POWERUPCYCLES - 1 ) begin
       powerOut_int <= 1;
       powerCnt <= powerCnt + 1;
     end else begin
