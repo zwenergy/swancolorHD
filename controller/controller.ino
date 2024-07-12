@@ -54,11 +54,16 @@ uint8_t conStart;
 // Rotate mode?
 uint8_t rotate = 0;
 uint8_t selectPrev = 0;
+uint8_t powerPrev = 0;
 
 // Internal rotate mode?
 // (only rotate the controls, not the video)
 uint8_t rotateInt = 0;
 uint8_t intRotateComboPrev = 0;
+
+// Video only rotation?
+// (only used with the swantroller).
+uint8_t rotateVideoOnly = 0;
 
 // Read the controller.
 void readController() {
@@ -82,6 +87,11 @@ void readController() {
   uint8_t snesL = 0;
   uint8_t snesR = 0;
 
+  // For swantroller.
+  uint8_t snesDat12 = 0;
+  uint8_t snesDat13 = 0;
+  uint8_t snesDat14 = 0;
+
   conX1 = 0;
   conX2 = 0;
   conX3 = 0;
@@ -99,8 +109,8 @@ void readController() {
   for ( uint8_t i = 0; i < 16; ++i ) {
     digitalWrite( SNESCLK, 0 );
     delayMicroseconds( 6 );
-    // We only care about the first 12 bits.
-    if ( i < 12 ) {
+    // We only care about the first 15 bits.
+    if ( i < 15 ) {
       uint8_t curDat = !digitalRead( SNESSERIAL );
       switch ( i ) {
         case 0:
@@ -143,6 +153,15 @@ void readController() {
         case 11:
           snesR = curDat;
           break;
+        case 12:
+          snesDat12 = curDat;
+          break;
+        case 13:
+          snesDat13 = curDat;
+          break;
+        case 14:
+          snesDat14 = curDat;
+          break;
         default:
           break;
         
@@ -152,63 +171,92 @@ void readController() {
     delayMicroseconds( 6 );
   }
 
-  // Do the mapping.
-  conStart = snesSTART;
-
-  // Pressing SELECT toggles rotate.
-  if ( !selectPrev && snesSELECT ) {
-    rotate = !rotate;
-  }
-
-  // Internal rotate?
   uint8_t intRotateCombo = snesL && snesR && snesSTART && snesUP;
-  if ( !intRotateComboPrev && intRotateCombo ) {
-    rotateInt = !rotateInt;
-  }
 
-  // Rotated screen?
-  if ( rotate || rotateInt ) {
-    conY2 = snesUP;
-    conY3 = snesRIGHT;
-    conY4 = snesDOWN;
+  // At very first, decide whether we have a regular controller
+  // or a swantroller. This is done by checking if UP and DOWN are "pressed".
+  if ( snesUP && snesDOWN ) {
+    // We have swantroller (... or a broken SNES controller).
+    conX1 = snesB;
+    conX2 = snesY;
+    conX3 = snesSELECT;
+    conX4 = snesSTART;
     conY1 = snesLEFT;
+    conY2 = snesRIGHT;
+    conY3 = snesA;
+    conY4 = snesX;
+    conA = snesL;
+    conB = snesR;
+    conStart = snesDat12;
 
-    conX2 = snesX;
-    conX3 = snesA;
-    conX4 = snesB;
-    conX1 = snesY;
+    // The POWER button is transmitted as the 14th bit, the SOUND via 13th bit.
+    // We currently use the POWER button for video rotation only.
+    if ( !powerPrev && snesDat14 ) {
+      rotateVideoOnly = !rotateVideoOnly;
+    }
+    
     
   } else {
-    // Not rotated screen.
-    
-    // In case L is pressed, we map the WS Y buttons to the DPAD.
-    if ( snesL ) {
-      conY1 = snesUP;
-      conY2 = snesRIGHT;
-      conY3 = snesDOWN;
-      conY4 = snesLEFT;
-    } else {
-      conX1 = snesUP;
-      conX2 = snesRIGHT;
-      conX3 = snesDOWN;
-      conX4 = snesLEFT;
+    // Regular SNES controller.
+    // Do the mapping.
+    conStart = snesSTART;
+  
+    // Pressing SELECT toggles rotate.
+    if ( !selectPrev && snesSELECT ) {
+      rotate = !rotate;
     }
   
-    // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
-    if ( snesR ) {
-      conY1 = snesX;
-      conY2 = snesA;
-      conY3 = snesB;
-      conY4 = snesY;
-    } else {
-      conB = snesB |snesY;
-      conA = snesA |snesX;
+    // Internal rotate?
+    if ( !intRotateComboPrev && intRotateCombo ) {
+      rotateInt = !rotateInt;
     }
-
+  
+    // Rotated screen?
+    if ( rotate || rotateInt ) {
+      conY2 = snesUP;
+      conY3 = snesRIGHT;
+      conY4 = snesDOWN;
+      conY1 = snesLEFT;
+  
+      conX2 = snesX;
+      conX3 = snesA;
+      conX4 = snesB;
+      conX1 = snesY;
+      
+    } else {
+      // Not rotated screen.
+      
+      // In case L is pressed, we map the WS Y buttons to the DPAD.
+      if ( snesL ) {
+        conY1 = snesUP;
+        conY2 = snesRIGHT;
+        conY3 = snesDOWN;
+        conY4 = snesLEFT;
+      } else {
+        conX1 = snesUP;
+        conX2 = snesRIGHT;
+        conX3 = snesDOWN;
+        conX4 = snesLEFT;
+      }
+    
+      // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
+      if ( snesR ) {
+        conY1 = snesX;
+        conY2 = snesA;
+        conY3 = snesB;
+        conY4 = snesY;
+      } else {
+        conB = snesB |snesY;
+        conA = snesA |snesX;
+      }
+    }
   }
+
+
 
   selectPrev = snesSELECT;
   intRotateComboPrev = intRotateCombo;
+  powerPrev = snesDat14;
 }
 
 
@@ -230,7 +278,7 @@ void updateWonderSignals() {
 }
 
 void doComm() {
-  if ( rotate ) {
+  if ( rotate || rotateVideoOnly ) {
     // Actuall drive GND.
     pinMode( ARDCON, OUTPUT );
   } else {
