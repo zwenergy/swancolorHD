@@ -62,7 +62,17 @@ The required FFC is 24 pins with 0.5 mm pitch.
 | 8               | 33               |
 | 9               | 34               |
 
-## Controller Mapping
+## Controller
+The swancolorHD uses a SNES controller.
+Any regular SNES controller should work.
+
+You can also turn an empty WonderSwan Color into a controller using the [**swantroller** project](https://github.com/zwenergy/swantroller).
+This turns the WSC shell into a controller with a SNES plug.
+Note, that the current version is only to be used with the WSC consolizer, not a regular SNES console.
+The reason for this is that the swantroller uses a different button layout as a SNES controller.
+<img src="https://raw.githubusercontent.com/zwenergy/swantroller/main/res/swantrollere3.png" alt="swantroller" width="700"/>
+
+## SNES Controller Mapping
 The controller mapping differs for landscape and portrait mode.
 ### Landscape Mode
 By default, the SNES DPAD is mapped to the X buttons of the WonderSwan. 
