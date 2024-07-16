@@ -3,7 +3,7 @@
 //-- Author: zwenergy
 //-----------------------------------------------------------------------
 
-`define RES_720P_75HZ
+`define RES_480P
 `define GW_IDE
 
 package configPackage;  

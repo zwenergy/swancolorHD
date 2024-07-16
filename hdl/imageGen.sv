@@ -27,6 +27,8 @@ module imageGen
   output logic[2:0] tmds_n
 );
 
+localparam int CORRECTX = 2;
+
 localparam int VIEWPORTLEN_X = SCALE * 224;
 localparam int VIEWPORTLEN_Y = SCALE * 144;
 localparam int VIEWPORTSTART_X = ( FRAMEWIDTH - VIEWPORTLEN_X ) / 2;
@@ -136,7 +138,7 @@ always_ff @( posedge pxlClk ) begin
     end
 
     // Viewport stuff
-    if ( cx > VIEWPORTSTART_X && cx <= VIEWPORTEND_X && cy > VIEWPORTSTART_Y && cy <= VIEWPORTEND_Y )
+    if ( cx > VIEWPORTSTART_X + CORRECTX && cx <= VIEWPORTEND_X + CORRECTX && cy > VIEWPORTSTART_Y && cy <= VIEWPORTEND_Y )
     begin
       rgb <= latestPixel;
     end 
@@ -192,7 +194,7 @@ always_ff @( posedge pxlClk ) begin
     end
 
     // Viewport stuff
-    if ( cx > VIEWPORTSTARTROT_X && cx <= VIEWPORTENDROT_X && cy > VIEWPORTSTARTROT_Y && cy <= VIEWPORTENDROT_Y )
+    if ( cx > VIEWPORTSTARTROT_X + CORRECTX && cx <= VIEWPORTENDROT_X + CORRECTX && cy > VIEWPORTSTARTROT_Y && cy <= VIEWPORTENDROT_Y )
     begin
       rgb <= latestPixel;
     end 
