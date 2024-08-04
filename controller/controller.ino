@@ -66,8 +66,8 @@ uint8_t intRotateComboPrev = 0;
 uint8_t rotateVideoOnly = 0;
 
 // Alternative input mode?
-// X buttons => DPAD
-// Y buttons => ABXY
+// X buttons => ABXY
+// Y buttons => DPAD
 // A/B => L/R
 uint8_t altInput = 0;
 uint8_t altInputComboPrev = 0;
@@ -264,15 +264,15 @@ void readController() {
 
       } else {
         // Alternative input mode. Useful for, e.g., Rhyme Rider Kerorican.
-        conX1 = snesUP;
-        conX2 = snesRIGHT;
-        conX3 = snesDOWN;
-        conX4 = snesLEFT;
+        conY1 = snesUP;
+        conY2 = snesRIGHT;
+        conY3 = snesDOWN;
+        conY4 = snesLEFT;
 
-        conY1 = snesX;
-        conY2 = snesA;
-        conY3 = snesB;
-        conY4 = snesY;
+        conX1 = snesX;
+        conX2 = snesA;
+        conX3 = snesB;
+        conX4 = snesY;
 
         conB = snesL;
         conA = snesR;

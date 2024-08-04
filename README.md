@@ -84,20 +84,20 @@ When holding L, the SNES DPAD is mapped to the WS Y buttons.
 When holding R, A/B/X/Y are mapped to Y2/Y3/Y1/Y4.
 
 For the few games, which require to hold X & Y & A/B buttons at the same time, an alternative input mode is existing.
-In this alternative input mode, the X buttons are mapped to the DPAD, the Y buttons are mapped to A/B/X/Y.
+In this alternative input mode, the Y buttons are mapped to the DPAD, the X buttons are mapped to A/B/X/Y.
 The WS B button is mapped to the SNES L button and the WS A button is mapped to the SNES R button.
 To enter or exit this alternative input mode, press **L + R + START + DPAD DOWN**.
 
 |SNES Button | WS Button (no shoulder button held) | WS Button (holding L) | WS Button (holding R )| WS Button (alternative input mode) |
 |------------|-------------------------------------|-----------------------|-----------------------|------------------------------------|
-|UP | X1 | Y1 | X1 | X1 |
-|DOWN | X3 | Y3 | X3 | X3 |
-|LEFT | X4 | Y4 | X4 | X4 |
-|RIGHT | X2 | Y2 | X2 | X2 |
-|A | A | A | Y2 | Y2 |
-|B | B | B | Y3 | Y3 |
-|X | A | A | Y1 | Y1 |
-|Y | B | B | Y4 | Y4 |
+|UP | X1 | Y1 | X1 | Y1 |
+|DOWN | X3 | Y3 | X3 | Y3 |
+|LEFT | X4 | Y4 | X4 | Y4 |
+|RIGHT | X2 | Y2 | X2 | Y2 |
+|A | A | A | Y2 | X2 |
+|B | B | B | Y3 | X3 |
+|X | A | A | Y1 | X1 |
+|Y | B | B | Y4 | X4 |
 |L | - | - | - | B |
 |R | - | - | - | A |
 |START | START | START | START | START |
