@@ -100,7 +100,7 @@ To enter or exit this alternative input mode, press **L + R + START + DPAD DOWN*
 |Y | B | B | Y4 | Y4 |
 |L | - | - | - | B |
 |R | - | - | - | A |
-|START | START | START | START |
+|START | START | START | START | START |
 
 ### Portrait Mode
 The SNES DPAD is mapped to the Y buttons of the WonderSwan (rotated accordingly).
