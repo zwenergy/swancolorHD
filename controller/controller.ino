@@ -65,6 +65,13 @@ uint8_t intRotateComboPrev = 0;
 // (only used with the swantroller).
 uint8_t rotateVideoOnly = 0;
 
+// Alternative input mode?
+// X buttons => DPAD
+// Y buttons => ABXY
+// A/B => L/R
+uint8_t altInput = 0;
+uint8_t altInputComboPrev = 0;
+
 // Read the controller.
 void readController() {
   // Set the latch to high for 12 us.
@@ -172,6 +179,7 @@ void readController() {
   }
 
   uint8_t intRotateCombo = snesL && snesR && snesSTART && snesUP;
+  uint8_t altInputCombo = snesL && snesR && snesSTART && snesDOWN;
 
   // At very first, decide whether we have a regular controller
   // or a swantroller. This is done by checking if UP and DOWN are "pressed".
@@ -209,6 +217,8 @@ void readController() {
     // Internal rotate?
     if ( !intRotateComboPrev && intRotateCombo ) {
       rotateInt = !rotateInt;
+    } else if ( !altInputComboPrev && altInputCombo ) {
+      altInput = !altInput;
     }
   
     // Rotated screen?
@@ -226,28 +236,47 @@ void readController() {
     } else {
       // Not rotated screen.
       
-      // In case L is pressed, we map the WS Y buttons to the DPAD.
-      if ( snesL ) {
-        conY1 = snesUP;
-        conY2 = snesRIGHT;
-        conY3 = snesDOWN;
-        conY4 = snesLEFT;
+      //  Regular input mode.
+      if ( !altInput ) {
+        // In case L is pressed, we map the WS Y buttons to the DPAD.
+        if ( snesL ) {
+          conY1 = snesUP;
+          conY2 = snesRIGHT;
+          conY3 = snesDOWN;
+          conY4 = snesLEFT;
+        } else {
+          conX1 = snesUP;
+          conX2 = snesRIGHT;
+          conX3 = snesDOWN;
+          conX4 = snesLEFT;
+        }
+      
+        // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
+        if ( snesR ) {
+          conY1 = snesX;
+          conY2 = snesA;
+          conY3 = snesB;
+          conY4 = snesY;
+        } else {
+          conB = snesB |snesY;
+          conA = snesA |snesX;
+        }
+
       } else {
+        // Alternative input mode. Useful for, e.g., Rhyme Rider Kerorican.
         conX1 = snesUP;
         conX2 = snesRIGHT;
         conX3 = snesDOWN;
         conX4 = snesLEFT;
-      }
-    
-      // In case R is pressed, we map the WS Y buttons to the A/B/X/Y.
-      if ( snesR ) {
+
         conY1 = snesX;
         conY2 = snesA;
         conY3 = snesB;
         conY4 = snesY;
-      } else {
-        conB = snesB |snesY;
-        conA = snesA |snesX;
+
+        conB = snesL;
+        conA = snesR;
+
       }
     }
   }
@@ -257,6 +286,7 @@ void readController() {
   selectPrev = snesSELECT;
   intRotateComboPrev = intRotateCombo;
   powerPrev = snesDat14;
+  altInputComboPrev = altInputCombo;
 }
 
 
